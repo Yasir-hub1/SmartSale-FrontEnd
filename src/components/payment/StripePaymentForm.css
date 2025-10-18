@@ -1,0 +1,363 @@
+/* Estilos para el formulario de pago con Stripe */
+.stripe-payment-form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.payment-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.payment-header h3 svg {
+  color: #3498db;
+  font-size: 1.2rem;
+}
+
+.payment-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #27ae60;
+  background: #f8f9fa;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.card-element-container {
+  margin-bottom: 25px;
+}
+
+.card-element-container label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.card-element {
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fafafa;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.card-element:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  background: white;
+}
+
+.card-element.StripeElement--invalid {
+  border-color: #e74c3c;
+}
+
+.card-element.StripeElement--complete {
+  border-color: #27ae60;
+}
+
+.payment-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #fdf2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.payment-error svg {
+  font-size: 1rem;
+}
+
+.payment-actions {
+  margin-bottom: 25px;
+}
+
+.pay-button {
+  width: 100%;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.pay-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9, #1f618d);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.pay-button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.pay-button svg {
+  font-size: 1rem;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.payment-security {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.payment-security p {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-security p:last-child {
+  margin-bottom: 0;
+}
+
+.payment-success {
+  text-align: center;
+  padding: 40px 20px;
+  background: #f0f9ff;
+  border-radius: 15px;
+  border: 2px solid #27ae60;
+}
+
+.success-icon {
+  font-size: 3rem;
+  color: #27ae60;
+  margin-bottom: 20px;
+  animation: bounce 0.6s ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.payment-success h3 {
+  margin: 0 0 10px 0;
+  color: #27ae60;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.payment-success p {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.stripe-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #7f8c8d;
+}
+
+.stripe-loading .spinner {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #3498db;
+}
+
+.stripe-loading p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stripe-payment-form {
+    padding: 20px;
+    margin: 10px;
+  }
+  
+  .payment-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .payment-amount {
+    font-size: 1.3rem;
+  }
+  
+  .pay-button {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+  
+  .payment-security {
+    padding: 15px;
+  }
+  
+  .payment-security p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Estilos para elementos de Stripe */
+.StripeElement {
+  box-sizing: border-box;
+  height: 40px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+
+/* Estilos para el contenedor de elementos */
+#card-element {
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+#card-element:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  background: white;
+}
+
+/* Estilos para errores de Stripe */
+.StripeElement--invalid {
+  border-color: #e74c3c;
+}
+
+.StripeElement--complete {
+  border-color: #27ae60;
+}
+
+/* Animaciones */
+.stripe-payment-form {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estados de carga */
+.pay-button:disabled .spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Mejoras de accesibilidad */
+.pay-button:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+.card-element:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* Estilos para modo oscuro (opcional) */
+@media (prefers-color-scheme: dark) {
+  .stripe-payment-form {
+    background: #2c3e50;
+    color: white;
+  }
+  
+  .payment-header h3 {
+    color: white;
+  }
+  
+  .card-element {
+    background: #34495e;
+    border-color: #4a5568;
+    color: white;
+  }
+  
+  .payment-security {
+    background: #34495e;
+    border-color: #4a5568;
+  }
+  
+  .payment-security p {
+    color: #a0aec0;
+  }
+}
