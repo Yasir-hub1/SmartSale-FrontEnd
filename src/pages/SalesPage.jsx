@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FaChartLine, FaPlus, FaSearch, FaFilter, FaStore, FaUser, FaCalendarAlt, FaDollarSign, FaEye, FaDownload } from 'react-icons/fa';
+import { FaChartLine, FaPlus, FaSearch, FaFilter, FaStore, FaUser, FaCalendarAlt, FaDollarSign, FaEye, FaDownload, FaSync, FaTimes, FaFilePdf } from 'react-icons/fa';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 import { salesService } from '../services/api';
+import PDFDownloadButton from '../components/common/PDFDownloadButton';
+import NewSaleModal from '../components/sales/NewSaleModal';
 import './SalesPage.css';
 
 const SalesPage = () => {
@@ -10,7 +12,7 @@ const SalesPage = () => {
   const [publicSales, setPublicSales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTab, setSelectedTab] = useState('all'); // 'all', 'admin', 'public'
+  // Removed selectedTab state
   const [salesSummary, setSalesSummary] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -18,27 +20,118 @@ const SalesPage = () => {
     dateFrom: '',
     dateTo: ''
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize] = useState(10);
+  const [selectedSale, setSelectedSale] = useState(null);
+  const [showSaleModal, setShowSaleModal] = useState(false);
+  const [showNewSaleModal, setShowNewSaleModal] = useState(false);
 
   useEffect(() => {
     loadSales();
     loadSalesSummary();
   }, []);
 
-  const loadSales = async () => {
+  const loadSales = async (page = 1) => {
     try {
       setLoading(true);
+      
+      // Cargar todas las ventas sin paginación del backend
       const [adminSales, publicSalesData] = await Promise.all([
-        salesService.getSales(),
-        salesService.getPublicSales()
+        salesService.getSales({ page_size: 1000 }), // Cargar todas las ventas administrativas
+        salesService.getPublicSales({ page_size: 1000 }) // Cargar todas las ventas públicas
       ]);
       
       setSales(adminSales.results || adminSales);
       setPublicSales(publicSalesData.results || publicSalesData);
+      
+      // Calcular total de páginas basado en el total de ventas únicas
+      const allSales = [...(adminSales.results || adminSales), ...(publicSalesData.results || publicSalesData)];
+      const uniqueSales = allSales.reduce((acc, current) => {
+        const existingSale = acc.find(sale => sale.id === current.id);
+        if (!existingSale) {
+          acc.push(current);
+        }
+        return acc;
+      }, []);
+      
+      setTotalPages(Math.ceil(uniqueSales.length / pageSize));
     } catch (error) {
       handleApiError(error, 'Cargar ventas');
     } finally {
       setLoading(false);
     }
+  };
+
+  const refreshSales = async () => {
+    await loadSales();
+    await loadSalesSummary();
+    handleSuccess('Ventas actualizadas');
+  };
+
+  const handleViewSale = (saleId) => {
+    // Buscar la venta específica en las ventas filtradas
+    const filteredSales = getFilteredSales();
+    const sale = filteredSales.find(s => s.id === saleId);
+    
+    if (sale) {
+      setSelectedSale(sale);
+      setShowSaleModal(true);
+    } else {
+      handleApiError({ message: 'Venta no encontrada' }, 'Ver detalles');
+    }
+  };
+
+  const closeSaleModal = () => {
+    setShowSaleModal(false);
+    setSelectedSale(null);
+  };
+
+  const handleDownloadReceipt = async (saleId) => {
+    try {
+      // Buscar la venta específica en las ventas filtradas
+      const filteredSales = getFilteredSales();
+      const sale = filteredSales.find(s => s.id === saleId);
+      
+      if (sale) {
+        // Preparar datos para el PDF igual que en el agente
+        const saleData = {
+          sale_id: sale.id,
+          subtotal: sale.subtotal || 0,
+          total: sale.total || 0,
+          items_count: sale.total_items || sale.items?.length || 1,
+          payment_method: 'efectivo', // Por defecto
+          message: `Venta ${sale.id} - Total: $${sale.total}`
+        };
+        
+        // Importar pdfService directamente
+        const pdfService = (await import('../services/pdfService')).default;
+        
+        // Generar PDF con los datos específicos
+        await pdfService.generatePDFWithData(saleData, `nota_venta_${sale.id.slice(0, 8)}.pdf`);
+        
+        handleSuccess('Comprobante descargado');
+      } else {
+        throw new Error('Venta no encontrada');
+      }
+    } catch (error) {
+      handleApiError(error, 'Descargar comprobante');
+    }
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleNewSale = () => {
+    setShowNewSaleModal(true);
+  };
+
+  const handleNewSaleSuccess = (sale) => {
+    handleSuccess('¡Venta creada exitosamente!');
+    setShowNewSaleModal(false);
+    loadSales(); // Recargar la lista de ventas
+    loadSalesSummary(); // Recargar el resumen
   };
 
   const loadSalesSummary = async () => {
@@ -51,25 +144,37 @@ const SalesPage = () => {
   };
 
   const getFilteredSales = () => {
-    let allSales = [];
+    // Combinar todas las ventas (administrativas y públicas) y eliminar duplicados
+    const allSales = [...sales, ...publicSales];
     
-    if (selectedTab === 'all') {
-      allSales = [...sales, ...publicSales];
-    } else if (selectedTab === 'admin') {
-      allSales = sales;
-    } else if (selectedTab === 'public') {
-      allSales = publicSales;
-    }
+    // Eliminar duplicados basándose en el ID
+    const uniqueSales = allSales.reduce((acc, current) => {
+      const existingSale = acc.find(sale => sale.id === current.id);
+      if (!existingSale) {
+        acc.push(current);
+      }
+      return acc;
+    }, []);
 
-    return allSales.filter(sale => {
-      const matchesSearch = sale.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    return uniqueSales.filter(sale => {
+      const matchesSearch = sale.client?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           sale.id?.toString().includes(searchTerm.toLowerCase()) ||
                           sale.transaction_id?.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesStatus = !filters.status || sale.status === filters.status;
       
-      return matchesSearch && matchesStatus;
+      const matchesDateFrom = !filters.dateFrom || new Date(sale.created_at) >= new Date(filters.dateFrom);
+      const matchesDateTo = !filters.dateTo || new Date(sale.created_at) <= new Date(filters.dateTo);
+      
+      return matchesSearch && matchesStatus && matchesDateFrom && matchesDateTo;
     });
+  };
+
+  const getPaginatedSales = () => {
+    const filteredSales = getFilteredSales();
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return filteredSales.slice(startIndex, endIndex);
   };
 
   const formatDate = (dateString) => {
@@ -124,8 +229,8 @@ const SalesPage = () => {
   };
 
   const getSaleSource = (sale) => {
-    if (sale.user_name) {
-      return { type: 'admin', icon: FaUser, text: `Admin: ${sale.user_name}` };
+    if (sale.user) {
+      return { type: 'admin', icon: FaUser, text: `Admin: ${sale.user.first_name || sale.user.username}` };
     } else {
       return { type: 'public', icon: FaStore, text: 'Tienda Pública' };
     }
@@ -143,6 +248,10 @@ const SalesPage = () => {
   }
 
   const filteredSales = getFilteredSales();
+  const paginatedSales = getPaginatedSales();
+  
+  // Actualizar total de páginas basado en las ventas filtradas
+  const actualTotalPages = Math.ceil(filteredSales.length / pageSize);
 
   return (
     <div className="sales-page">
@@ -152,7 +261,11 @@ const SalesPage = () => {
           <p>Gestiona tus ventas y transacciones</p>
         </div>
         <div className="header-right">
-          <button className="btn-primary">
+          <button className="btn-secondary" onClick={refreshSales}>
+            <FaSync />
+            Actualizar
+          </button>
+          <button className="btn-primary" onClick={handleNewSale}>
             <FaPlus />
             Nueva Venta
           </button>
@@ -197,30 +310,6 @@ const SalesPage = () => {
         </div>
       )}
 
-      {/* Tabs de navegación */}
-      <div className="sales-tabs">
-        <button 
-          className={`tab-btn ${selectedTab === 'all' ? 'active' : ''}`}
-          onClick={() => setSelectedTab('all')}
-        >
-          <FaChartLine />
-          Todas las Ventas ({sales.length + publicSales.length})
-        </button>
-        <button 
-          className={`tab-btn ${selectedTab === 'admin' ? 'active' : ''}`}
-          onClick={() => setSelectedTab('admin')}
-        >
-          <FaUser />
-          Administrativas ({sales.length})
-        </button>
-        <button 
-          className={`tab-btn ${selectedTab === 'public' ? 'active' : ''}`}
-          onClick={() => setSelectedTab('public')}
-        >
-          <FaStore />
-          Públicas ({publicSales.length})
-        </button>
-      </div>
 
       {/* Filtros */}
       <div className="filters-section">
@@ -281,20 +370,20 @@ const SalesPage = () => {
 
       {/* Lista de ventas */}
       <div className="sales-list">
-        {filteredSales.length === 0 ? (
+        {paginatedSales.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">
               <FaChartLine />
             </div>
             <h3>No hay ventas registradas</h3>
             <p>Comienza registrando tu primera venta</p>
-            <button className="btn-primary">
+            <button className="btn-primary" onClick={handleNewSale}>
               <FaPlus />
               Registrar Primera Venta
             </button>
           </div>
         ) : (
-          filteredSales.map(sale => {
+          paginatedSales.map(sale => {
             const source = getSaleSource(sale);
             const SourceIcon = source.icon;
             
@@ -320,7 +409,7 @@ const SalesPage = () => {
                 <div className="sale-details">
                   <div className="detail-item">
                     <FaUser />
-                    <span>{sale.client_name}</span>
+                    <span>{sale.client?.name || 'Cliente Anónimo'}</span>
                   </div>
                   <div className="detail-item">
                     <FaCalendarAlt />
@@ -328,16 +417,16 @@ const SalesPage = () => {
                   </div>
                   <div className="detail-item">
                     <FaDollarSign />
-                    <span>{sale.total_items} productos</span>
+                    <span>{sale.total_items || sale.items?.length || 0} productos</span>
                   </div>
                 </div>
                 
                 <div className="sale-actions">
-                  <button className="action-btn view">
+                  <button className="action-btn view" onClick={() => handleViewSale(sale.id)}>
                     <FaEye />
                     Ver Detalles
                   </button>
-                  <button className="action-btn download">
+                  <button className="action-btn download" onClick={() => handleDownloadReceipt(sale.id)}>
                     <FaDownload />
                     Comprobante
                   </button>
@@ -347,6 +436,162 @@ const SalesPage = () => {
           })
         )}
       </div>
+
+      {/* Paginación */}
+      {filteredSales.length > 0 && actualTotalPages > 1 && (
+        <div className="pagination">
+          <button 
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          
+          <div className="pagination-info">
+            Página {currentPage} de {actualTotalPages}
+          </div>
+          
+          <button 
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === actualTotalPages}
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
+
+      {/* Modal de detalles de venta */}
+      {showSaleModal && selectedSale && (
+        <div className="sale-modal-overlay">
+          <div className="sale-modal">
+            <div className="sale-modal-header">
+              <h2>Detalles de la Venta</h2>
+              <button className="close-modal-btn" onClick={closeSaleModal}>
+                <FaTimes />
+              </button>
+            </div>
+            
+            <div className="sale-modal-content">
+              <div className="sale-modal-section">
+                <h3>Información General</h3>
+                <div className="sale-info-grid">
+                  <div className="info-item">
+                    <label>ID de Venta:</label>
+                    <span>{selectedSale.id}</span>
+                  </div>
+                  <div className="info-item">
+                    <label>Fecha:</label>
+                    <span>{formatDate(selectedSale.created_at)}</span>
+                  </div>
+                  <div className="info-item">
+                    <label>Estado:</label>
+                    <span>{getStatusBadge(selectedSale.status)}</span>
+                  </div>
+                  <div className="info-item">
+                    <label>Estado de Pago:</label>
+                    <span>{getPaymentStatusBadge(selectedSale.payment_status)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="sale-modal-section">
+                <h3>Información del Cliente</h3>
+                <div className="client-info">
+                  <div className="info-item">
+                    <label>Nombre:</label>
+                    <span>{selectedSale.client?.name || 'Cliente Anónimo'}</span>
+                  </div>
+                  <div className="info-item">
+                    <label>Email:</label>
+                    <span>{selectedSale.client?.email || 'N/A'}</span>
+                  </div>
+                  <div className="info-item">
+                    <label>Teléfono:</label>
+                    <span>{selectedSale.client?.phone || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="sale-modal-section">
+                <h3>Productos</h3>
+                <div className="products-list">
+                  {selectedSale.items && selectedSale.items.length > 0 ? (
+                    selectedSale.items.map((item, index) => (
+                      <div key={index} className="product-item">
+                        <div className="product-info">
+                          <span className="product-name">{item.product?.name || 'Producto'}</span>
+                          <span className="product-quantity">Cantidad: {item.quantity}</span>
+                        </div>
+                        <div className="product-price">
+                          {formatCurrency(item.price * item.quantity)}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="no-products">
+                      <p>No hay productos registrados</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="sale-modal-section">
+                <h3>Totales</h3>
+                <div className="totals-grid">
+                  <div className="total-item">
+                    <label>Subtotal:</label>
+                    <span>{formatCurrency(selectedSale.subtotal || 0)}</span>
+                  </div>
+                  <div className="total-item">
+                    <label>Descuento:</label>
+                    <span>{formatCurrency(selectedSale.discount || 0)}</span>
+                  </div>
+                  <div className="total-item total-final">
+                    <label>Total:</label>
+                    <span>{formatCurrency(selectedSale.total || 0)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {selectedSale.notes && (
+                <div className="sale-modal-section">
+                  <h3>Notas</h3>
+                  <p className="sale-notes">{selectedSale.notes}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="sale-modal-actions">
+              <button className="btn-secondary" onClick={closeSaleModal}>
+                Cerrar
+              </button>
+              <PDFDownloadButton
+                saleId={selectedSale.id}
+                receiptNumber={`NV-${selectedSale.id.slice(0, 8).toUpperCase()}`}
+                saleData={{
+                  sale_id: selectedSale.id,
+                  subtotal: selectedSale.subtotal || 0,
+                  total: selectedSale.total || 0,
+                  items_count: selectedSale.total_items || selectedSale.items?.length || 1,
+                  payment_method: 'efectivo',
+                  message: `Venta ${selectedSale.id} - Total: $${selectedSale.total}`
+                }}
+                variant="primary"
+                size="medium"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de nueva venta */}
+      <NewSaleModal
+        isOpen={showNewSaleModal}
+        onClose={() => setShowNewSaleModal(false)}
+        onSuccess={handleNewSaleSuccess}
+      />
     </div>
   );
 };

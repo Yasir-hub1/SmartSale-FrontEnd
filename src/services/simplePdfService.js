@@ -128,7 +128,7 @@ class SimplePDFService {
     yPosition += 6;
     this.doc.text(`Estado de Pago: ${paymentStatusMap[saleData.payment_status] || saleData.payment_status || 'Pagado'}`, 20, yPosition);
     yPosition += 6;
-    this.doc.text(`Total de Items: ${saleData.total_items || items.length}`, 20, yPosition);
+    this.doc.text(`Total de Items: ${saleData.total_items || 1}`, 20, yPosition);
     yPosition += 6;
     
     if (saleData.notes) {
@@ -180,9 +180,8 @@ class SimplePDFService {
 
   addTotals(yPosition, saleData) {
     const subtotal = saleData.subtotal || 0;
-    const tax = saleData.tax || (subtotal * 0.16);
     const discount = saleData.discount || 0;
-    const total = saleData.total || (subtotal + tax - discount);
+    const total = saleData.total || (subtotal - discount);
     
     this.doc.setFontSize(12);
     this.doc.setFont('helvetica', 'bold');
@@ -193,10 +192,6 @@ class SimplePDFService {
     this.doc.setFont('helvetica', 'normal');
     this.doc.text(`Subtotal:`, 120, yPosition);
     this.doc.text(`$${subtotal.toFixed(2)}`, 160, yPosition);
-    yPosition += 8;
-    
-    this.doc.text(`Impuestos (16%):`, 120, yPosition);
-    this.doc.text(`$${tax.toFixed(2)}`, 160, yPosition);
     yPosition += 8;
     
     if (discount > 0) {

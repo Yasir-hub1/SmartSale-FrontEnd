@@ -190,21 +190,19 @@ class PDFService {
         quantityFromMessage = parseInt(quantityMatch[1]);
       }
       
-      // Si tenemos el total pagado, usarlo para calcular el subtotal
+      // Si tenemos el total pagado, usarlo como subtotal
       let finalTotal = totalFromMessage;
       if (totalPaidMatch) {
         finalTotal = parseFloat(totalPaidMatch[1]);
-        totalFromMessage = finalTotal / 1.16; // Subtotal sin impuestos
+        totalFromMessage = finalTotal; // Subtotal = Total (sin impuestos)
       }
       
       const unitPrice = totalFromMessage / quantityFromMessage;
-      const tax = totalFromMessage * 0.16;
       
       console.log('Datos extraídos:', {
         totalFromMessage,
         quantityFromMessage,
         unitPrice,
-        tax,
         finalTotal
       });
       
@@ -212,7 +210,6 @@ class PDFService {
       const sale = {
         id: saleData.sale_id,
         subtotal: totalFromMessage,
-        tax: tax,
         discount: 0,
         total: finalTotal,
         status: 'completed',
