@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaRobot, FaMicrophone, FaMicrophoneSlash, FaPaperPlane, FaSpinner, FaTimes } from 'react-icons/fa';
 import aiAgentService from '../../services/aiAgentService';
+import PDFDownloadButton from '../common/PDFDownloadButton';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import './AIAgentChat.css';
 
@@ -133,6 +134,33 @@ const AIAgentChat = ({ isOpen, onClose, cartId, onProductsFound, onCartUpdated }
                   if (onCartUpdated) {
                     onCartUpdated();
                   }
+                  
+                  // Mostrar botón de descarga de PDF si está disponible
+                  if (result.order && result.order.sale_id) {
+                    addMessage(
+                      `📄 Tu nota de venta está lista para descargar: ${result.order.receipt_number}`,
+                      false
+                    );
+                    // Agregar mensaje con botón de descarga
+                    addMessage(
+                      `🔗 Descarga tu comprobante usando el botón de abajo:`,
+                      false
+                    );
+                    // Guardar información para mostrar botón con datos de la venta
+                    setMessages(prev => [...prev, {
+                      id: Date.now() + Math.random(),
+                      content: 'PDF_READY',
+                      isUser: false,
+                      type: 'pdf_download',
+                      saleId: result.order.sale_id,
+                      receiptNumber: result.order.receipt_number,
+                      saleData: {
+                        ...result.order,
+                        message: result.message // Incluir el mensaje del agente
+                      },
+                      timestamp: new Date()
+                    }]);
+                  }
                 }
               } else {
                 addMessage(result.error || 'Error procesando el pago', false);
@@ -257,21 +285,33 @@ const AIAgentChat = ({ isOpen, onClose, cartId, onProductsFound, onCartUpdated }
             </div>
           )}
 
-          {messages.map(message => (
-            <div key={message.id} className={`message ${message.isUser ? 'user' : 'agent'}`}>
-              <div className="message-avatar">
-                {message.isUser ? '👤' : '🤖'}
-              </div>
-              <div className="message-content">
-                <div className="message-text">
-                  {message.content}
-                </div>
-                <div className="message-time">
-                  {message.timestamp.toLocaleTimeString()}
-                </div>
-              </div>
-            </div>
-          ))}
+                  {messages.map(message => (
+                    <div key={message.id} className={`message ${message.isUser ? 'user' : 'agent'}`}>
+                      <div className="message-avatar">
+                        {message.isUser ? '👤' : '🤖'}
+                      </div>
+                      <div className="message-content">
+                        {message.type === 'pdf_download' ? (
+                          <div className="pdf-download-container">
+                            <PDFDownloadButton
+                              saleId={message.saleId}
+                              receiptNumber={message.receiptNumber}
+                              saleData={message.saleData}
+                              variant="primary"
+                              size="medium"
+                            />
+                          </div>
+                        ) : (
+                          <div className="message-text">
+                            {message.content}
+                          </div>
+                        )}
+                        <div className="message-time">
+                          {message.timestamp.toLocaleTimeString()}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
 
           {isLoading && (
             <div className="message agent">
