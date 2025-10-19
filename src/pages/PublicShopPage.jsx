@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FaShoppingCart, FaSearch, FaFilter, FaPlus, FaMinus, FaTrash, FaCreditCard, FaUser, FaEnvelope, FaPhone, FaHome } from 'react-icons/fa';
+import { FaShoppingCart, FaSearch, FaFilter, FaPlus, FaMinus, FaTrash, FaCreditCard, FaUser, FaEnvelope, FaPhone, FaHome, FaRobot } from 'react-icons/fa';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 import { productsService, cartService } from '../services/api';
 import CheckoutModal from '../components/checkout/CheckoutModal';
+import AIAgentChat from '../components/ai/AIAgentChat';
 import './PublicShopPage.css';
 
 const PublicShopPage = () => {
@@ -14,18 +15,33 @@ const PublicShopPage = () => {
   const [categories, setCategories] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [showAIAgent, setShowAIAgent] = useState(false);
   const [cart, setCart] = useState({
     items: [],
     total: 0,
     itemCount: 0
   });
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [cartId, setCartId] = useState('');
 
   // Cargar productos y categorías
   useEffect(() => {
     loadProducts();
     loadCategories();
     loadCart();
+  }, []);
+
+  // Escuchar evento para abrir modal de checkout
+  useEffect(() => {
+    const handleOpenCheckoutModal = () => {
+      setShowCheckout(true);
+    };
+
+    window.addEventListener('openCheckoutModal', handleOpenCheckoutModal);
+    
+    return () => {
+      window.removeEventListener('openCheckoutModal', handleOpenCheckoutModal);
+    };
   }, []);
 
   const loadProducts = async () => {
@@ -57,6 +73,7 @@ const PublicShopPage = () => {
         total: cartData.total_amount || 0,
         itemCount: cartData.total_items || 0
       });
+      setCartId(cartData.id || '');
     } catch (error) {
       console.log('Carrito vacío o error cargando:', error);
     }
@@ -111,6 +128,20 @@ const PublicShopPage = () => {
     console.log('Venta creada:', sale);
   };
 
+  // Handlers para el agente inteligente
+  const handleProductsFound = (foundProducts) => {
+    // Filtrar productos mostrados basado en los encontrados por el agente
+    const productIds = foundProducts.map(p => p.id);
+    setProducts(prevProducts => 
+      prevProducts.filter(p => productIds.includes(p.id))
+    );
+    handleSuccess(`Mostrando ${foundProducts.length} productos encontrados`);
+  };
+
+  const handleCartUpdated = () => {
+    loadCart();
+  };
+
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -152,10 +183,23 @@ const PublicShopPage = () => {
           <p>Bienvenido a nuestra tienda online. Explora nuestros productos y realiza tu compra.</p>
         </div>
         
-        {/* Carrito flotante */}
-        <div className="cart-float" onClick={() => setShowCart(!showCart)}>
-          <FaShoppingCart />
-          <span className="cart-count">{cart.itemCount}</span>
+        {/* Botones de acción */}
+        <div className="action-buttons">
+          {/* Botón del Agente Inteligente */}
+          <button 
+            className="ai-agent-btn"
+            onClick={() => setShowAIAgent(true)}
+            title="Asistente Inteligente"
+          >
+            <FaRobot />
+            <span>Asistente</span>
+          </button>
+          
+          {/* Carrito flotante */}
+          <div className="cart-float" onClick={() => setShowCart(!showCart)}>
+            <FaShoppingCart />
+            <span className="cart-count">{cart.itemCount}</span>
+          </div>
         </div>
       </div>
 
@@ -326,12 +370,20 @@ const PublicShopPage = () => {
       {showCart && <div className="cart-overlay" onClick={() => setShowCart(false)}></div>}
 
       {/* Modal de Checkout */}
-      {/* Modal de checkout con integración de Stripe */}
       <CheckoutModal
         isOpen={showCheckout}
         onClose={() => setShowCheckout(false)}
         cart={cart}
         onSuccess={handleCheckoutSuccess}
+      />
+
+      {/* Agente Inteligente */}
+      <AIAgentChat
+        isOpen={showAIAgent}
+        onClose={() => setShowAIAgent(false)}
+        cartId={cartId}
+        onProductsFound={handleProductsFound}
+        onCartUpdated={handleCartUpdated}
       />
     </div>
   );

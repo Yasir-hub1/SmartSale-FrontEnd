@@ -39,11 +39,11 @@ const Layout = ({ children }) => {
       href: '/dashboard',
       icon: FaChartBar
     },
-    {
-      name: 'Tienda',
-      href: '/shop',
-      icon: FaStore
-    },
+    // {
+    //   name: 'Tienda',
+    //   href: '/shop',
+    //   icon: FaStore
+    // },
     {
       name: 'Productos',
       href: '/products',
