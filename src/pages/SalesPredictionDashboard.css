@@ -1,0 +1,336 @@
+.sales-prediction-dashboard {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  gap: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.dashboard-header h1 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.dashboard-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.dashboard-controls select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.dashboard-controls select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Model Info Card */
+.model-info-card {
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.model-info-card .card-header h3 {
+  color: white;
+}
+
+.model-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.metric-label {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Main Chart Card */
+.main-chart-card {
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.main-chart-card .card-content {
+  padding: 20px;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.analysis-card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.analysis-card .card-content {
+  padding: 20px;
+}
+
+/* Transactions Card */
+.transactions-card {
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.transactions-card .card-content {
+  padding: 20px;
+}
+
+/* Predictions Card */
+.predictions-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.predictions-card .card-content {
+  padding: 20px;
+}
+
+.predictions-table {
+  overflow-x: auto;
+}
+
+.predictions-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.predictions-table th,
+.predictions-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.predictions-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+}
+
+.predictions-table td {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.predictions-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sales-prediction-dashboard {
+    padding: 10px;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .dashboard-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .dashboard-controls select {
+    min-width: auto;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .model-metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .predictions-table {
+    font-size: 12px;
+  }
+  
+  .predictions-table th,
+  .predictions-table td {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .metric-value {
+    font-size: 16px;
+  }
+  
+  .predictions-table {
+    font-size: 11px;
+  }
+}
+
+/* Chart Customization */
+.recharts-cartesian-axis-tick-value {
+  font-size: 12px;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+.recharts-legend-wrapper {
+  padding-top: 20px;
+}
+
+/* Loading States */
+.dashboard-loading .loading-spinner {
+  width: 50px;
+  height: 50px;
+}
+
+/* Button Styles */
+.dashboard-controls button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.dashboard-controls button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dashboard-controls button[data-variant="primary"] {
+  background-color: #007bff;
+  color: white;
+}
+
+.dashboard-controls button[data-variant="primary"]:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.dashboard-controls button[data-variant="secondary"] {
+  background-color: #6c757d;
+  color: white;
+}
+
+.dashboard-controls button[data-variant="secondary"]:hover:not(:disabled) {
+  background-color: #545b62;
+}
+
+/* Card Enhancements */
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 20px 20px 0 20px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+}
+
+.card-header h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+/* Chart Container */
+.recharts-wrapper {
+  margin: 0 auto;
+}
+
+/* Custom Tooltip */
+.recharts-tooltip-content {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sales-prediction-dashboard > * {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Success/Error States */
+.success-message {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.error-message {
+  color: #dc3545;
+  font-weight: 500;
+}

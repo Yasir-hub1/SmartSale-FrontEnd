@@ -9,6 +9,7 @@ import {
   FaChartLine,
   FaChartBar,
   FaFileAlt,
+  FaBrain,
   FaBars,
   FaTimes,
   FaCog,
@@ -69,6 +70,11 @@ const Layout = ({ children }) => {
       name: 'Reportes',
       href: '/reports',
       icon: FaFileAlt
+    },
+    {
+      name: 'Predicciones IA',
+      href: '/sales-prediction',
+      icon: FaBrain
     }
   ];
 

@@ -462,7 +462,7 @@ export const mlService = {
 
   async generatePrediction(inputData) {
     try {
-      const response = await api.post('/ml/generate/', inputData);
+      const response = await api.post('/ml/predictions/forecast_sales/', inputData);
       return response.data;
     } catch (error) {
       throw new Error('Error generando predicción');
@@ -475,6 +475,53 @@ export const mlService = {
       return response.data;
     } catch (error) {
       throw new Error('Error obteniendo información del modelo');
+    }
+  },
+
+  async trainSalesForecast(useSynthetic = true) {
+    try {
+      const response = await api.post('/ml/models/train_sales_forecast/', {
+        use_synthetic: useSynthetic
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error('Error entrenando modelo de pronóstico');
+    }
+  },
+
+  async getHistoricalData(params = {}) {
+    try {
+      const response = await api.get('/ml/predictions/historical_data/', { params });
+      return response.data;
+    } catch (error) {
+      throw new Error('Error obteniendo datos históricos');
+    }
+  },
+
+  async getProductAnalysis(params = {}) {
+    try {
+      const response = await api.get('/ml/predictions/product_analysis/', { params });
+      return response.data;
+    } catch (error) {
+      throw new Error('Error obteniendo análisis de productos');
+    }
+  },
+
+  async getClientAnalysis(params = {}) {
+    try {
+      const response = await api.get('/ml/predictions/client_analysis/', { params });
+      return response.data;
+    } catch (error) {
+      throw new Error('Error obteniendo análisis de clientes');
+    }
+  },
+
+  async retrainModel(modelId) {
+    try {
+      const response = await api.post(`/ml/models/${modelId}/retrain/`);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error reentrenando modelo');
     }
   }
 };

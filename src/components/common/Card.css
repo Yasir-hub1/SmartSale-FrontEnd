@@ -1,0 +1,96 @@
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.card-header {
+  padding: 20px 20px 0 20px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+}
+
+.card-header h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-title {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Variantes de Card */
+.card.primary {
+  border-left: 4px solid #007bff;
+}
+
+.card.success {
+  border-left: 4px solid #28a745;
+}
+
+.card.warning {
+  border-left: 4px solid #ffc107;
+}
+
+.card.danger {
+  border-left: 4px solid #dc3545;
+}
+
+.card.info {
+  border-left: 4px solid #17a2b8;
+}
+
+/* Card con gradiente */
+.card.gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.card.gradient .card-title {
+  color: white;
+}
+
+/* Card compacta */
+.card.compact .card-header {
+  padding: 15px 15px 0 15px;
+}
+
+.card.compact .card-content {
+  padding: 15px;
+}
+
+/* Card sin sombra */
+.card.no-shadow {
+  box-shadow: none;
+  border: 1px solid #ddd;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 15px;
+  }
+  
+  .card-header {
+    padding: 15px 15px 0 15px;
+  }
+  
+  .card-content {
+    padding: 15px;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+}

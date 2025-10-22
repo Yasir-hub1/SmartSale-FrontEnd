@@ -30,6 +30,7 @@ import PaymentPage from './pages/PaymentPage';
 import ShopPage from './pages/ShopPage';
 import PublicShopPage from './pages/PublicShopPage';
 import PublicHomePage from './pages/PublicHomePage';
+import SalesPredictionDashboard from './pages/SalesPredictionDashboard';
 
 // Servicios
 import indexedDBService from './services/indexedDBService';
@@ -155,6 +156,11 @@ function App() {
                           <Route path="/payment" element={
                             <Layout>
                               <PaymentPage />
+                            </Layout>
+                          } />
+                          <Route path="/sales-prediction" element={
+                            <Layout>
+                              <SalesPredictionDashboard />
                             </Layout>
                           } />
                         </Routes>
