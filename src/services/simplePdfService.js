@@ -68,14 +68,14 @@ class SimplePDFService {
   addCompanyInfo(yPosition) {
     this.doc.setFontSize(14);
     this.doc.setFont('helvetica', 'bold');
-    this.doc.text('SMARTSALES365', 20, yPosition);
+    this.doc.text('SmartSales365', 20, yPosition);
     yPosition += 8;
     
     this.doc.setFontSize(10);
     this.doc.setFont('helvetica', 'normal');
     this.doc.text('Sistema de Gestión de Ventas', 20, yPosition);
     yPosition += 6;
-    this.doc.text('Email: info@smartsales365.com', 20, yPosition);
+    this.doc.text('Email: info@SmartSales365.com', 20, yPosition);
     yPosition += 6;
     this.doc.text('Teléfono: +52 55 1234 5678', 20, yPosition);
     yPosition += 20;

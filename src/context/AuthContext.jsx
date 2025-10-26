@@ -67,7 +67,15 @@ const AuthProvider = ({ children }) => {
       }
     };
 
-    checkAuth();
+    // Timeout de seguridad para asegurar que isLoading se establezca en false
+    const timeoutId = setTimeout(() => {
+      console.log('[AuthContext] Timeout de seguridad - estableciendo isLoading en false');
+      setIsLoading(false);
+    }, 3000);
+
+    checkAuth().finally(() => {
+      clearTimeout(timeoutId);
+    });
   }, []);
 
   const login = async (credentials) => {

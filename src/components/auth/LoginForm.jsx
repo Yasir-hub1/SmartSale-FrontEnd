@@ -8,10 +8,17 @@ const LoginForm = () => {
     username: '',
     password: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, isLoading, error, clearError } = useAuth();
   const { handleApiError, handleSuccess } = useErrorHandler();
 
+  console.log('LoginForm - isLoading:', isLoading, 'isSubmitting:', isSubmitting, 'error:', error);
+
+  // Debug adicional para el botón
+  console.log('🔘 Estado del botón - disabled:', isSubmitting, 'texto:', isSubmitting ? 'Iniciando sesión...' : 'Iniciar Sesión');
+
   const handleChange = (e) => {
+    console.log('Input change:', e.target.name, e.target.value);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -25,23 +32,39 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const result = await login(formData);
+    setIsSubmitting(true);
     
-        if (result.success) {
-          console.log(`✅ Login exitoso: ${result.user.first_name || result.user.username}`);
-          handleSuccess(`¡Bienvenido, ${result.user.first_name || result.user.username}!`);
-        } else {
-          console.error(`❌ Error de login: ${result.error || 'Credenciales inválidas'}`);
-          handleApiError({ response: { status: 401, data: { detail: result.error || 'Credenciales inválidas' } } }, 'Login');
-        }
+    // Timeout de seguridad para el botón
+    const timeoutId = setTimeout(() => {
+      console.log('⏰ Timeout de seguridad - re-habilitando botón');
+      setIsSubmitting(false);
+    }, 10000); // 10 segundos máximo
+    
+    try {
+      const result = await login(formData);
+      
+      if (result.success) {
+        console.log(`✅ Login exitoso: ${result.user.first_name || result.user.username}`);
+        handleSuccess(`¡Bienvenido, ${result.user.first_name || result.user.username}!`);
+      } else {
+        console.error(`❌ Error de login: ${result.error || 'Credenciales inválidas'}`);
+        handleApiError({ response: { status: 401, data: { detail: result.error || 'Credenciales inválidas' } } }, 'Login');
+      }
+    } catch (error) {
+      console.error('❌ Error inesperado en login:', error);
+      handleApiError(error, 'Login');
+    } finally {
+      clearTimeout(timeoutId);
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h1>SmartSales365</h1>
-          <p>Sistema de Gestión Comercial Inteligente</p>
+          <h1>Ventas Inteligentes</h1>
+          <p>Sistema de Gestión Comercial en Línea</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
@@ -55,7 +78,7 @@ const LoginForm = () => {
               onChange={handleChange}
               required
               placeholder="Ingresa tu usuario"
-              disabled={isLoading}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -69,7 +92,7 @@ const LoginForm = () => {
               onChange={handleChange}
               required
               placeholder="Ingresa tu contraseña"
-              disabled={isLoading}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -82,9 +105,10 @@ const LoginForm = () => {
           <button
             type="submit"
             className="login-button"
-            disabled={isLoading}
+            disabled={isSubmitting}
+            onClick={() => console.log('🔘 Botón clickeado - isSubmitting:', isSubmitting)}
           >
-            {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            {isSubmitting ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </button>
         </form>
 

@@ -107,7 +107,7 @@ const ShopPage = () => {
       {/* Header */}
       <div className="shop-header">
         <div className="shop-title">
-          <h1>🛍️ Tienda SmartSales365</h1>
+          <h1> Tienda Ventas Inteligentes</h1>
           <p>Selecciona tus productos favoritos</p>
         </div>
         

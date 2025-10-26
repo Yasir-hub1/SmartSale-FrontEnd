@@ -13,7 +13,7 @@
   align-items: center;
   margin-bottom: 30px;
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #2c3e50;
   border-radius: 12px;
   color: white;
 }
@@ -54,7 +54,7 @@
   position: absolute;
   top: -5px;
   right: -5px;
-  background: #ff4757;
+  background-color: #e74c3c;
   color: white;
   border-radius: 50%;
   width: 25px;
@@ -182,7 +182,7 @@
 /* Botones de carrito */
 .add-to-cart-btn {
   width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #e74c3c;
   color: white;
   border: none;
   padding: 12px;
@@ -197,8 +197,9 @@
 }
 
 .add-to-cart-btn:hover:not(:disabled) {
+  background-color: #c0392b;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
 }
 
 .add-to-cart-btn:disabled {
@@ -214,7 +215,7 @@
 }
 
 .quantity-btn {
-  background: #f1f2f6;
+  background-color: #e74c3c;
   border: none;
   width: 35px;
   height: 35px;
@@ -227,7 +228,7 @@
 }
 
 .quantity-btn:hover {
-  background: #ddd;
+  background-color: #c0392b;
   transform: scale(1.1);
 }
 
@@ -238,7 +239,7 @@
 }
 
 .remove-btn {
-  background: #ff4757;
+  background-color: #e74c3c;
   color: white;
   border: none;
   width: 35px;
@@ -252,7 +253,7 @@
 }
 
 .remove-btn:hover {
-  background: #ff3742;
+  background-color: #c0392b;
   transform: scale(1.1);
 }
 
@@ -356,7 +357,7 @@
 
 .clear-cart-btn {
   flex: 1;
-  background: #ff4757;
+  background-color: #2c3e50;
   color: white;
   border: none;
   padding: 12px;
@@ -367,12 +368,12 @@
 }
 
 .clear-cart-btn:hover {
-  background: #ff3742;
+  background-color: #34495e;
 }
 
 .checkout-btn {
   flex: 2;
-  background: linear-gradient(135deg, #2ed573 0%, #17a2b8 100%);
+  background-color: #27ae60;
   color: white;
   border: none;
   padding: 12px;
@@ -387,8 +388,9 @@
 }
 
 .checkout-btn:hover {
+  background-color: #229954;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(46, 213, 115, 0.4);
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
 }
 
 /* Overlay */

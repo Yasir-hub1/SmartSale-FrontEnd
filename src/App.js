@@ -46,7 +46,7 @@ function App() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        console.log('[App] Inicializando SmartSales365...');
+        console.log('[App] Inicializando Ventas Inteligentes en Línea...');
         
         // Inicializar IndexedDB
         const dbInitialized = await indexedDBService.initialize();
@@ -85,7 +85,7 @@ function App() {
       <div className="app-loading">
         <div className="loading-container">
           <div className="loading-spinner"></div>
-          <h2>SmartSales365</h2>
+          <h2>Ventas Inteligentes</h2>
           <p>Inicializando aplicación...</p>
           {initError && (
             <div className="init-error">

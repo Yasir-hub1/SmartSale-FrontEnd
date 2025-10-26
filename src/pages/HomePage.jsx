@@ -90,7 +90,7 @@ const HomePage = () => {
       {/* Hero Section */}
       <div className="hero-section">
         <div className="hero-content">
-          <h1>Bienvenido a SmartSales365</h1>
+          <h1>Bienvenido a Ventas Inteligentes</h1>
           <p>Sistema inteligente de gestión comercial con IA y funcionamiento offline</p>
           
           <div className="hero-stats">
@@ -139,112 +139,9 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Features */}
-      <div className="features-section">
-        <h2>Características Principales</h2>
-        <div className="features-grid">
-          {features.map((feature, index) => {
-            const IconComponent = feature.icon;
-            return (
-              <div 
-                key={index}
-                className={`feature-card ${feature.available ? 'available' : 'unavailable'}`}
-              >
-                <div className="feature-icon">
-                  <IconComponent />
-                </div>
-                <div className="feature-content">
-                  <h3>{feature.title}</h3>
-                  <p>{feature.description}</p>
-                </div>
-                <div className="feature-status">
-                  {feature.available ? (
-                    <span className="status-available">Disponible</span>
-                  ) : (
-                    <span className="status-unavailable">No disponible</span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+    
 
-      {/* Status Section */}
-      <div className="status-section">
-        <h2>Estado del Sistema</h2>
-        <div className="status-grid">
-          <div className="status-card">
-            <div className="status-header">
-              <h3>Conexión</h3>
-              <div className={`status-indicator ${isOfflineMode ? 'offline' : 'online'}`}>
-                <div className="status-dot"></div>
-                <span>{isOfflineMode ? 'Offline' : 'Online'}</span>
-              </div>
-            </div>
-            <p>
-              {isOfflineMode 
-                ? 'Trabajando en modo offline. Los cambios se sincronizarán automáticamente.'
-                : 'Conectado al servidor. Todos los datos están sincronizados.'
-              }
-            </p>
-          </div>
-
-          <div className="status-card">
-            <div className="status-header">
-              <h3>Sincronización</h3>
-              <div className="sync-info">
-                <span className="sync-count">{pendingCount} pendientes</span>
-              </div>
-            </div>
-            <p>
-              Última sincronización: {formatLastSync(lastSyncTime)}
-            </p>
-          </div>
-
-          <div className="status-card">
-            <div className="status-header">
-              <h3>Carrito</h3>
-              <div className="cart-info">
-                <span className="cart-count">{itemCount} productos</span>
-              </div>
-            </div>
-            <p>
-              Total: ${total.toFixed(2)}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Voice Commands Help */}
-      <div className="voice-help">
-        <h2>Comandos de Voz Disponibles</h2>
-        <div className="voice-commands">
-          <div className="command-group">
-            <h4>Carrito</h4>
-            <ul>
-              <li>"Agregar [producto] al carrito"</li>
-              <li>"Quitar [producto] del carrito"</li>
-              <li>"Ver carrito"</li>
-            </ul>
-          </div>
-          <div className="command-group">
-            <h4>Navegación</h4>
-            <ul>
-              <li>"Ir a productos"</li>
-              <li>"Ir a clientes"</li>
-              <li>"Ir a dashboard"</li>
-            </ul>
-          </div>
-          <div className="command-group">
-            <h4>Reportes</h4>
-            <ul>
-              <li>"Generar reporte de ventas"</li>
-              <li>"Mostrar reporte de clientes"</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+   
     </div>
   );
 };

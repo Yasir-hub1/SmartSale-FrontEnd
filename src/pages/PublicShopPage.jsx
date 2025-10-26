@@ -179,7 +179,7 @@ const PublicShopPage = () => {
       {/* Header */}
       <div className="public-shop-header">
         <div className="shop-title">
-          <h1>🛍️ SmartSales365 - Tienda Pública</h1>
+          <h1>Ventas Inteligentes - Tienda Pública</h1>
           <p>Bienvenido a nuestra tienda online. Explora nuestros productos y realiza tu compra.</p>
         </div>
         

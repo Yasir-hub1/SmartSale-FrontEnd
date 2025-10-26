@@ -99,10 +99,10 @@ const Layout = ({ children }) => {
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <div className="logo-icon">📱</div>
+            <div className="logo-icon">💼</div>
             <div className="logo-text">
-              <h2>SmartSales365</h2>
-              <p>Sistema de Gestión</p>
+              <h2>Ventas Inteligentes</h2>
+              <p>Sistema en Línea</p>
             </div>
           </div>
           <button 
@@ -229,7 +229,7 @@ const getPageTitle = (pathname) => {
     '/payment': 'Pago'
   };
   
-  return titles[pathname] || 'SmartSales365';
+  return titles[pathname] || 'Ventas Inteligentes';
 };
 
 export default Layout;
