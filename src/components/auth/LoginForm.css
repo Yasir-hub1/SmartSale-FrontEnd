@@ -15,6 +15,8 @@
   width: 100%;
   max-width: 400px;
   animation: slideUp 0.6s ease-out;
+  position: relative;
+  z-index: 10;
 }
 
 @keyframes slideUp {
@@ -52,6 +54,8 @@
 
 .login-form {
   margin-bottom: 30px;
+  position: relative;
+  z-index: 5;
 }
 
 .form-group {
@@ -74,6 +78,10 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   box-sizing: border-box;
+  background-color: white;
+  color: #2d3748;
+  cursor: text;
+  pointer-events: auto;
 }
 
 .form-group input:focus {
@@ -85,6 +93,15 @@
 .form-group input:disabled {
   background-color: #f7fafc;
   cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.form-group input:not(:disabled) {
+  background-color: white;
+  cursor: text;
+  pointer-events: auto;
+  opacity: 1;
 }
 
 .login-button {
@@ -110,6 +127,13 @@
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.login-button:not(:disabled) {
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .login-footer {

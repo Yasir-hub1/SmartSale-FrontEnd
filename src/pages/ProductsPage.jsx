@@ -189,9 +189,9 @@ const ProductsPage = () => {
                 >
                   <FaTrash />
                 </button>
-                <button className="btn-primary">
+                {/* <button className="btn-primary">
                   Agregar al Carrito
-                </button>
+                </button> */}
               </div>
             </div>
           ))}

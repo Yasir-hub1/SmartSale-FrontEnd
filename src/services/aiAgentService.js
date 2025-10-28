@@ -10,6 +10,8 @@ class AIAgentService {
     this.isListening = false;
     this.mediaRecorder = null;
     this.audioChunks = [];
+    this.stream = null;
+    this.onRecordingComplete = null;
   }
 
   /**
@@ -33,6 +35,11 @@ class AIAgentService {
    */
   async processVoiceCommand(audioBlob, cartId = '') {
     try {
+      // Validar que el audio no esté vacío
+      if (!audioBlob || audioBlob.size === 0) {
+        throw new Error('No se grabó audio válido');
+      }
+
       // Convertir audio a formato compatible
       const wavBlob = await this.convertAudioToWav(audioBlob);
       
@@ -40,14 +47,31 @@ class AIAgentService {
       formData.append('audio', wavBlob, 'voice-command.wav');
       formData.append('cart_id', cartId);
 
+      console.log(`[AIAgentService] Enviando audio de ${wavBlob.size} bytes`);
+
       const response = await api.post(`${this.baseURL}/voice/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        timeout: 30000, // 30 segundos para procesamiento de voz
       });
+      
+      console.log('[AIAgentService] Respuesta recibida:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error procesando comando de voz:', error);
+      
+      // Manejar diferentes tipos de errores
+      if (error.code === 'ECONNABORTED') {
+        throw new Error('El procesamiento de voz está tardando demasiado. Inténtalo de nuevo.');
+      } else if (error.response?.status === 413) {
+        throw new Error('El archivo de audio es demasiado grande. Graba un mensaje más corto.');
+      } else if (error.response?.status === 400) {
+        throw new Error('Formato de audio no válido. Inténtalo de nuevo.');
+      } else if (error.response?.status >= 500) {
+        throw new Error('Error del servidor. Inténtalo más tarde.');
+      }
+      
       throw error;
     }
   }
@@ -92,19 +116,37 @@ class AIAgentService {
         return { success: false, error: 'Ya está grabando' };
       }
 
+      // Verificar permisos de micrófono
+      const permission = await navigator.permissions.query({ name: 'microphone' });
+      if (permission.state === 'denied') {
+        return { success: false, error: 'Permisos de micrófono denegados' };
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          sampleRate: 44100
+          sampleRate: 44100,
+          channelCount: 1
         } 
       });
 
+      // Detectar el mejor formato soportado
+      let mimeType = 'audio/webm;codecs=opus';
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = 'audio/webm';
+        if (!MediaRecorder.isTypeSupported(mimeType)) {
+          mimeType = 'audio/mp4';
+        }
+      }
+
       this.mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus'
+        mimeType: mimeType,
+        audioBitsPerSecond: 128000
       });
 
       this.audioChunks = [];
+      this.stream = stream;
 
       this.mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -113,19 +155,49 @@ class AIAgentService {
       };
 
       this.mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+        const audioBlob = new Blob(this.audioChunks, { type: mimeType });
+        console.log(`[AIAgentService] Audio grabado: ${audioBlob.size} bytes, tipo: ${mimeType}`);
         this.onRecordingComplete?.(audioBlob);
-        stream.getTracks().forEach(track => track.stop());
+        this.cleanup();
       };
 
-      this.mediaRecorder.start();
+      this.mediaRecorder.onerror = (event) => {
+        console.error('Error en MediaRecorder:', event.error);
+        this.cleanup();
+      };
+
+      this.mediaRecorder.start(100); // Grabar en chunks de 100ms
       this.isListening = true;
 
       return { success: true };
     } catch (error) {
       console.error('Error iniciando grabación:', error);
-      return { success: false, error: error.message };
+      this.cleanup();
+      
+      let errorMessage = 'Error iniciando grabación';
+      if (error.name === 'NotAllowedError') {
+        errorMessage = 'Permisos de micrófono denegados';
+      } else if (error.name === 'NotFoundError') {
+        errorMessage = 'No se encontró micrófono';
+      } else if (error.name === 'NotSupportedError') {
+        errorMessage = 'Grabación de audio no soportada';
+      }
+      
+      return { success: false, error: errorMessage };
     }
+  }
+
+  /**
+   * Limpia recursos de grabación
+   */
+  cleanup() {
+    if (this.stream) {
+      this.stream.getTracks().forEach(track => track.stop());
+      this.stream = null;
+    }
+    this.mediaRecorder = null;
+    this.audioChunks = [];
+    this.isListening = false;
   }
 
   /**
@@ -134,7 +206,6 @@ class AIAgentService {
   stopVoiceRecording() {
     if (this.mediaRecorder && this.isListening) {
       this.mediaRecorder.stop();
-      this.isListening = false;
       return { success: true };
     }
     return { success: false, error: 'No hay grabación activa' };

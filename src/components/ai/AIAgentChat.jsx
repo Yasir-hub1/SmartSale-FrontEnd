@@ -121,14 +121,26 @@ const AIAgentChat = ({ isOpen, onClose, cartId, onProductsFound, onCartUpdated }
             case 'checkout':
               if (result.success) {
                 addMessage(result.message, false);
+                
+                // Detectar método de pago de la acción
+                const paymentMethod = action.payment_method || 'cash';
+                
                 // Abrir modal de checkout solo para tarjetas
-                if (result.action === 'open_checkout_modal') {
+                if (paymentMethod === 'credit_card' || paymentMethod === 'debit_card' || paymentMethod === 'card' || 
+                    result.action === 'open_checkout_modal') {
+                  
+                  addMessage('💳 Abriendo el modal de pago con tarjeta...', false);
+                  
                   // Notificar al componente padre para abrir el modal de checkout
                   if (onCartUpdated) {
                     onCartUpdated();
                   }
+                  
                   // Emitir evento personalizado para abrir el modal
-                  window.dispatchEvent(new CustomEvent('openCheckoutModal'));
+                  setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('openCheckoutModal'));
+                  }, 1000); // Pequeño delay para que el usuario vea el mensaje
+                  
                 } else {
                   // Para efectivo y transferencia, limpiar carrito automáticamente
                   if (onCartUpdated) {
@@ -347,16 +359,16 @@ const AIAgentChat = ({ isOpen, onClose, cartId, onProductsFound, onCartUpdated }
 
         <div className="chat-input">
           <div className="input-container">
-            <textarea
-              ref={inputRef}
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Escribe tu mensaje o usa el micrófono..."
-              disabled={isLoading}
-              rows="1"
-            />
-            <div className="input-actions">
+            <div className="input-wrapper">
+              <textarea
+                ref={inputRef}
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Escribe tu mensaje o usa el micrófono..."
+                disabled={isLoading || isListening}
+                rows="1"
+              />
               {isListening ? (
                 <button
                   onClick={stopVoiceRecording}
@@ -364,6 +376,7 @@ const AIAgentChat = ({ isOpen, onClose, cartId, onProductsFound, onCartUpdated }
                   title="Detener grabación"
                 >
                   <FaMicrophoneSlash />
+                  <span className="recording-indicator"></span>
                 </button>
               ) : (
                 <button
@@ -375,16 +388,27 @@ const AIAgentChat = ({ isOpen, onClose, cartId, onProductsFound, onCartUpdated }
                   <FaMicrophone />
                 </button>
               )}
-              <button
-                onClick={() => sendMessage()}
-                disabled={!inputMessage.trim() || isLoading}
-                className="send-btn"
-                title="Enviar mensaje"
-              >
-                <FaPaperPlane />
-              </button>
             </div>
+            <button
+              onClick={() => sendMessage()}
+              disabled={!inputMessage.trim() || isLoading || isListening}
+              className="send-btn"
+              title="Enviar mensaje"
+            >
+              <FaPaperPlane />
+            </button>
           </div>
+          
+          {isListening && (
+            <div className="voice-recording-status">
+              <div className="recording-animation">
+                <div className="pulse-dot"></div>
+                <div className="pulse-dot"></div>
+                <div className="pulse-dot"></div>
+              </div>
+              <p>🎤 Escuchando... Di tu comando</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

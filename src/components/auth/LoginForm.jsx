@@ -8,10 +8,14 @@ const LoginForm = () => {
     username: '',
     password: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, isLoading, error, clearError } = useAuth();
   const { handleApiError, handleSuccess } = useErrorHandler();
 
+  console.log('LoginForm - isLoading:', isLoading, 'isSubmitting:', isSubmitting, 'error:', error);
+
   const handleChange = (e) => {
+    console.log('Input change:', e.target.name, e.target.value);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -25,6 +29,8 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    setIsSubmitting(true);
+    
     const result = await login(formData);
     
         if (result.success) {
@@ -34,6 +40,8 @@ const LoginForm = () => {
           console.error(`❌ Error de login: ${result.error || 'Credenciales inválidas'}`);
           handleApiError({ response: { status: 401, data: { detail: result.error || 'Credenciales inválidas' } } }, 'Login');
         }
+    
+    setIsSubmitting(false);
   };
 
   return (
@@ -55,7 +63,7 @@ const LoginForm = () => {
               onChange={handleChange}
               required
               placeholder="Ingresa tu usuario"
-              disabled={isLoading}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -69,7 +77,7 @@ const LoginForm = () => {
               onChange={handleChange}
               required
               placeholder="Ingresa tu contraseña"
-              disabled={isLoading}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -82,9 +90,9 @@ const LoginForm = () => {
           <button
             type="submit"
             className="login-button"
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
-            {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            {isSubmitting ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </button>
         </form>
 
@@ -92,6 +100,28 @@ const LoginForm = () => {
           <p>Credenciales por defecto:</p>
           <p><strong>Usuario:</strong> admin</p>
           <p><strong>Contraseña:</strong> admin123</p>
+          
+          {/* Botón de test temporal */}
+          <button 
+            type="button" 
+            onClick={() => {
+              console.log('Test button clicked');
+              console.log('Form data:', formData);
+              console.log('isSubmitting:', isSubmitting);
+              console.log('isLoading:', isLoading);
+            }}
+            style={{
+              marginTop: '10px',
+              padding: '8px 16px',
+              background: '#10b981',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer'
+            }}
+          >
+            Test Debug
+          </button>
         </div>
       </div>
     </div>

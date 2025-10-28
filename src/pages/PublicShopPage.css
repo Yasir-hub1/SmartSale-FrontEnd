@@ -1,7 +1,7 @@
 /* Estilos para la página pública de tienda */
 .public-shop-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #2c3e50;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -51,7 +51,7 @@
 }
 
 .ai-agent-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #e74c3c;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -63,12 +63,13 @@
   font-size: 14px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
 }
 
 .ai-agent-btn:hover {
+  background-color: #c0392b;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
 }
 
 .ai-agent-btn:active {
@@ -154,8 +155,8 @@
 
 .search-box input:focus, .category-filter select:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
 }
 
 .search-box svg, .category-filter svg {
@@ -247,7 +248,7 @@
 /* Botones de carrito */
 .add-to-cart-btn {
   width: 100%;
-  background: #3498db;
+  background-color: #e74c3c;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -263,7 +264,7 @@
 }
 
 .add-to-cart-btn:hover:not(:disabled) {
-  background: #2980b9;
+  background-color: #c0392b;
   transform: translateY(-2px);
 }
 
@@ -590,8 +591,8 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
 }
 
 .form-group input.error {
@@ -621,7 +622,7 @@
 }
 
 .payment-option:hover {
-  background: rgba(52, 152, 219, 0.1);
+  background: rgba(231, 76, 60, 0.1);
 }
 
 .payment-option input[type="radio"] {
@@ -653,13 +654,13 @@
 }
 
 .cancel-btn {
-  background: #95a5a6;
+  background-color: #2c3e50;
   color: white;
   border: none;
 }
 
 .cancel-btn:hover:not(:disabled) {
-  background: #7f8c8d;
+  background-color: #34495e;
 }
 
 .confirm-btn {

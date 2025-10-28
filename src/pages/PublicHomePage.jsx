@@ -9,7 +9,7 @@ const PublicHomePage = () => {
       {/* Hero Section */}
       <div className="hero-section">
         <div className="hero-content">
-          <h1>Bienvenido a SmartSales365</h1>
+              <h1>Bienvenido a SmartSales365</h1>
           <p>Tu tienda online de confianza con los mejores productos y precios</p>
           <div className="hero-actions">
             <Link to="/tienda" className="btn-primary">
@@ -24,7 +24,7 @@ const PublicHomePage = () => {
         </div>
         <div className="hero-image">
           <div className="hero-illustration">
-            🛍️
+            Ventas Inteligentes
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@ const PublicHomePage = () => {
       {/* Features Section */}
       <div className="features-section">
         <div className="container">
-          <h2>¿Por qué elegir SmartSales365?</h2>
+              <h2>¿Por qué elegir SmartSales365?</h2>
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon">
@@ -88,7 +88,7 @@ const PublicHomePage = () => {
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">
-              <h3>SmartSales365</h3>
+                  <h3>SmartSales365</h3>
               <p>Tu tienda online de confianza</p>
             </div>
             
@@ -103,13 +103,13 @@ const PublicHomePage = () => {
             
             <div className="footer-section">
               <h4>Contacto</h4>
-              <p>📧 info@smartsales365.com</p>
+                  <p>📧 info@smartsales365.com</p>
               <p>📞 +52 55 1234 5678</p>
             </div>
           </div>
           
           <div className="footer-bottom">
-            <p>&copy; 2024 SmartSales365. Todos los derechos reservados.</p>
+                <p>&copy; 2024 SmartSales365. Todos los derechos reservados.</p>
           </div>
         </div>
       </div>

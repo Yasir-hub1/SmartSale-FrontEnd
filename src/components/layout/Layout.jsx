@@ -61,21 +61,22 @@ const Layout = ({ children }) => {
       icon: FaChartLine
     },
     {
-      name: 'Carrito',
-      href: '/cart',
-      icon: FaShoppingCart,
-      badge: itemCount
+      name: 'Predicciones IA',
+      href: '/sales-prediction',
+      icon: FaBrain
     },
+    // {
+    //   name: 'Carrito',
+    //   href: '/cart',
+    //   icon: FaShoppingCart,
+    //   badge: itemCount
+    // },
     {
       name: 'Reportes',
       href: '/reports',
       icon: FaFileAlt
     },
-    {
-      name: 'Predicciones IA',
-      href: '/sales-prediction',
-      icon: FaBrain
-    }
+   
   ];
 
   const isActiveRoute = (href, exact = false) => {
@@ -99,7 +100,7 @@ const Layout = ({ children }) => {
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <div className="logo-icon">📱</div>
+            <div className="logo-icon">💼</div>
             <div className="logo-text">
               <h2>SmartSales365</h2>
               <p>Sistema de Gestión</p>
@@ -165,14 +166,10 @@ const Layout = ({ children }) => {
             </a>
           </div>
           
-          <div className="sidebar-user">
-            <UserInfo />
-          </div>
+        
           
           <div className="sidebar-actions">
-            <button className="action-btn" title="Configuración">
-              <FaCog />
-            </button>
+           
             <LogoutButton />
           </div>
         </div>

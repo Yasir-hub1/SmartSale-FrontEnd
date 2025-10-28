@@ -554,7 +554,7 @@ export const paymentService = {
 
   async getPaymentMethods() {
     try {
-      const response = await api.get('/api/payments/methods/');
+      const response = await api.get('/payments/methods/available/');
       return response.data;
     } catch (error) {
       throw new Error('Error obteniendo métodos de pago');

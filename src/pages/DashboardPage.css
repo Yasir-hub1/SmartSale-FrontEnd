@@ -2,6 +2,9 @@
 .dashboard-page {
   max-width: 1200px;
   margin: 0 auto;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 100vh;
+  padding: 20px;
 }
 
 /* Header */
@@ -10,31 +13,37 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
+  border-bottom: none;
 }
 
 .header-left h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: #111827;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0 0 4px 0;
 }
 
 .header-left p {
-  color: #6b7280;
+  color: #718096;
   margin: 0;
 }
 
 .last-update {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: #718096;
 }
 
 /* Indicador offline */
 .offline-indicator {
-  background: #fef3c7;
-  color: #92400e;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 24px;
@@ -53,14 +62,16 @@
 .kpi-card {
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.05);
 }
 
 .kpi-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+  border-color: #667eea;
 }
 
 .kpi-header {
@@ -131,8 +142,9 @@
 .chart-card {
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.05);
 }
 
 .chart-header {
@@ -166,7 +178,7 @@
 }
 
 .chart-btn.active {
-  background: #3b82f6;
+  background: #667eea;
   color: white;
 }
 
@@ -203,8 +215,9 @@
 .prediction-card {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
 .prediction-header {
@@ -279,22 +292,23 @@
   padding: 16px 20px;
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.05);
 }
 
 .action-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border-color: #3b82f6;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+  border-color: #667eea;
 }
 
 .action-btn svg {
   width: 20px;
   height: 20px;
-  color: #3b82f6;
+  color: #667eea;
 }
 
 /* Responsive */

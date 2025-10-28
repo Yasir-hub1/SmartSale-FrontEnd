@@ -69,7 +69,7 @@ const DashboardPage = () => {
       change: '+12.5%',
       trend: 'up',
       icon: FaBox,
-      color: '#10b981'
+      color: '#667eea'
     },
     {
       title: 'Total Clientes',
@@ -77,7 +77,7 @@ const DashboardPage = () => {
       change: '+8.2%',
       trend: 'up',
       icon: FaUsers,
-      color: '#3b82f6'
+      color: '#764ba2'
     },
     {
       title: 'Total Ventas',
@@ -85,7 +85,7 @@ const DashboardPage = () => {
       change: '-2.1%',
       trend: 'down',
       icon: FaChartLine,
-      color: '#f59e0b'
+      color: '#667eea'
     },
     {
       title: 'Usuarios Online',
@@ -93,7 +93,7 @@ const DashboardPage = () => {
       change: '+5.3%',
       trend: 'up',
       icon: FaDollarSign,
-      color: '#8b5cf6'
+      color: '#764ba2'
     }
   ] : [];
 
@@ -127,8 +127,8 @@ const DashboardPage = () => {
       {/* Header */}
       <div className="page-header">
         <div className="header-left">
-          <h1>Dashboard</h1>
-          <p>Resumen de tu negocio</p>
+          <h1>SmartSales365 Dashboard</h1>
+          <p>Resumen de tu negocio inteligente</p>
         </div>
         <div className="header-right">
           <div className="last-update">
@@ -140,7 +140,7 @@ const DashboardPage = () => {
       {/* Indicador offline */}
       {isOfflineMode && (
         <div className="offline-indicator">
-          <span>📱 Dashboard con datos locales</span>
+          <span>📱 SmartSales365 - Datos locales</span>
         </div>
       )}
 
@@ -167,39 +167,13 @@ const DashboardPage = () => {
         })}
       </div>
 
-      {/* Gráficos */}
-      <div className="charts-section">
-        <div className="chart-card">
-          <div className="chart-header">
-            <h3>Tendencia de Ventas</h3>
-            <div className="chart-controls">
-              <button className="chart-btn active">7 días</button>
-              <button className="chart-btn">30 días</button>
-              <button className="chart-btn">90 días</button>
-            </div>
-          </div>
-          <div className="chart-placeholder">
-            <div className="chart-icon">📈</div>
-            <p>Gráfico de tendencias</p>
-          </div>
-        </div>
-
-        <div className="chart-card">
-          <div className="chart-header">
-            <h3>Productos Más Vendidos</h3>
-          </div>
-          <div className="chart-placeholder">
-            <div className="chart-icon">📊</div>
-            <p>Gráfico de barras</p>
-          </div>
-        </div>
-      </div>
+   
 
       {/* Predicciones ML */}
       <div className="predictions-section">
         <div className="prediction-card">
           <div className="prediction-header">
-            <h3>Predicciones de IA</h3>
+              <h3>SmartSales365 IA Predictions</h3>
             <div className="prediction-status">
               <span className="status-badge">Activo</span>
             </div>
@@ -221,28 +195,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Acciones rápidas */}
-      <div className="quick-actions">
-        <h3>Acciones Rápidas</h3>
-        <div className="actions-grid">
-          <button className="action-btn">
-            <FaChartLine />
-            Nueva Venta
-          </button>
-          <button className="action-btn">
-            <FaUsers />
-            Agregar Cliente
-          </button>
-          <button className="action-btn">
-            <FaBox />
-            Agregar Producto
-          </button>
-          <button className="action-btn">
-            <FaDollarSign />
-            Ver Reportes
-          </button>
-        </div>
-      </div>
+    
     </div>
   );
 };
