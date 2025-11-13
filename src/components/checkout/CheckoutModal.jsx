@@ -70,14 +70,17 @@ const CheckoutModal = ({ isOpen, onClose, cart, onSuccess }) => {
       console.log('[CheckoutModal] Pago exitoso con Stripe:', paymentData);
       
       // Después del pago exitoso con Stripe, procesar el checkout
-      const checkoutData = {
+      console.log('[CheckoutModal] Procesando checkout con datos:', {
         client: clientInfo,
         payment_method: 'stripe',
         stripe_payment_intent_id: paymentData.payment_intent_id
-      };
+      });
       
-      console.log('[CheckoutModal] Procesando checkout con datos:', checkoutData);
-      const response = await cartService.checkout(checkoutData);
+      const response = await cartService.checkout(
+        clientInfo,
+        'stripe',
+        paymentData.payment_intent_id
+      );
       
       console.log('[CheckoutModal] Checkout exitoso:', response);
       handleSuccess('¡Pago procesado exitosamente!');
@@ -132,12 +135,10 @@ const CheckoutModal = ({ isOpen, onClose, cart, onSuccess }) => {
     
     try {
       // Para métodos de pago no-Stripe (efectivo, transferencia)
-      const checkoutData = {
-        client: clientInfo,
-        payment_method: selectedPaymentMethod.code
-      };
-      
-      const response = await cartService.checkout(checkoutData);
+      const response = await cartService.checkout(
+        clientInfo,
+        selectedPaymentMethod.code
+      );
       
       handleSuccess('¡Compra realizada exitosamente!');
       onSuccess(response);

@@ -350,6 +350,13 @@ export const salesService = {
       const response = await api.post('/sales/sales/', saleData);
       return response.data;
     } catch (error) {
+      // Preservar el error original del backend para mejor debugging
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.error || 
+                           error.response.data.message || 
+                           (typeof error.response.data === 'string' ? error.response.data : 'Error creando venta');
+        throw new Error(errorMessage);
+      }
       throw new Error('Error creando venta');
     }
   },
@@ -701,13 +708,25 @@ export const syncService = {
         }
       },
 
-      async checkout(clientInfo) {
+      async checkout(clientInfo, paymentMethod = 'cash', stripePaymentIntentId = null) {
         try {
-          const response = await api.post('/sales/cart/checkout/', {
-            client: clientInfo
-          });
+          const checkoutData = {
+            client: clientInfo,
+            payment_method: paymentMethod
+          };
+          
+          // Agregar stripe_payment_intent_id si está disponible
+          if (stripePaymentIntentId) {
+            checkoutData.stripe_payment_intent_id = stripePaymentIntentId;
+          }
+          
+          const response = await api.post('/sales/cart/checkout/', checkoutData);
           return response.data;
         } catch (error) {
+          // Preservar el error original del backend para mejor debugging
+          if (error.response && error.response.data) {
+            throw new Error(error.response.data.error || error.response.data.message || 'Error procesando checkout');
+          }
           throw new Error('Error procesando checkout');
         }
       }

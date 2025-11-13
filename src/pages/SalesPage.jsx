@@ -157,7 +157,8 @@ const SalesPage = () => {
     }, []);
 
     return uniqueSales.filter(sale => {
-      const matchesSearch = sale.client?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      const clientName = sale.client_name || sale.client?.name || '';
+      const matchesSearch = clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           sale.id?.toString().includes(searchTerm.toLowerCase()) ||
                           sale.transaction_id?.toLowerCase().includes(searchTerm.toLowerCase());
       
@@ -409,7 +410,7 @@ const SalesPage = () => {
                 <div className="sale-details">
                   <div className="detail-item">
                     <FaUser />
-                    <span>{sale.client?.name || 'Cliente Anónimo'}</span>
+                    <span>{sale.client_name || sale.client?.name || 'Cliente Anónimo'}</span>
                   </div>
                   <div className="detail-item">
                     <FaCalendarAlt />
@@ -501,15 +502,15 @@ const SalesPage = () => {
                 <div className="client-info">
                   <div className="info-item">
                     <label>Nombre:</label>
-                    <span>{selectedSale.client?.name || 'Cliente Anónimo'}</span>
+                    <span>{selectedSale.client_name || selectedSale.client?.name || 'Cliente Anónimo'}</span>
                   </div>
                   <div className="info-item">
                     <label>Email:</label>
-                    <span>{selectedSale.client?.email || 'N/A'}</span>
+                    <span>{selectedSale.client_email || selectedSale.client?.email || 'N/A'}</span>
                   </div>
                   <div className="info-item">
                     <label>Teléfono:</label>
-                    <span>{selectedSale.client?.phone || 'N/A'}</span>
+                    <span>{selectedSale.client_phone || selectedSale.client?.phone || 'N/A'}</span>
                   </div>
                 </div>
               </div>
